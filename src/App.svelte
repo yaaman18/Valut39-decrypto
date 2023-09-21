@@ -1,8 +1,8 @@
 <script lang="ts">
   import { invoke } from "@tauri-apps/api/tauri";
 
-  let inputCipher = "7Lwf4BHFmLpqSkV12YxP8k1dgFLCpRtK8Lpa8G31ovg7";
-  let password = "hogehoge";
+  let inputCipher = "";
+  let password = "";
   let outputSeed = ""
   let passwordWarning = "";
   let showPassword = false;
@@ -12,13 +12,10 @@
   }
 
   async function handleFormSubmit() {
-  console.log("Form submitted");  // フォームが送信されたことを確認
+  console.log("Form submitted");
   try {
-    console.log("Invoking handle_data");  // Rust関数を呼び出す前にログ
     outputSeed = await invoke('handle_data', { inputCipher: inputCipher, password: password });
-    console.log("Received outputSeed:", outputSeed);  // Rust関数からの戻り値をログ
   } catch (error) {
-    console.error("Error invoking handle_data:", error);
   }
 }
 </script>
