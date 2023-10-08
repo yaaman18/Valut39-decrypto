@@ -12,7 +12,6 @@
   }
 
   async function handleFormSubmit() {
-  console.log("Form submitted");
   try {
     outputSeed = await invoke('handle_data', { inputCipher: inputCipher, password: password });
   } catch (error) {
