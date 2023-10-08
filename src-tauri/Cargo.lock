@@ -3,26 +3,6 @@
 version = 3
 
 [[package]]
-name = "Nil-wallet-decrypto"
-version = "0.0.0"
-dependencies = [
- "anyhow",
- "bs58",
- "chacha20",
- "fs2",
- "generic-array",
- "semver 1.0.18",
- "serde",
- "serde_json",
- "sha2 0.9.9",
- "tauri",
- "tauri-api",
- "tauri-build",
- "tokio",
- "typenum",
-]
-
-[[package]]
 name = "addr2line"
 version = "0.21.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1766,6 +1746,26 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8e752e3c216bc8a491c5b59fa46da10f1379ae450b19ac688e07f4bb55042e98"
 dependencies = [
  "gcc",
+]
+
+[[package]]
+name = "nil_wallet_decrypto"
+version = "0.0.0"
+dependencies = [
+ "anyhow",
+ "bs58",
+ "chacha20",
+ "fs2",
+ "generic-array",
+ "semver 1.0.18",
+ "serde",
+ "serde_json",
+ "sha2 0.9.9",
+ "tauri",
+ "tauri-api",
+ "tauri-build",
+ "tokio",
+ "typenum",
 ]
 
 [[package]]

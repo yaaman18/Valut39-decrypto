@@ -2,16 +2,16 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use std::collections::HashMap;
-use std::error::Error;
 use std::env;
-use std::path::PathBuf;
 use std::io;
 
 use chacha20::cipher::{KeyIvInit, StreamCipher};
 use generic_array::GenericArray;
 use generic_array::typenum::{U12, U32};
-use tokio::fs::read_to_string;
 use sha2::{Digest, Sha256};
+
+const WORDLIST_EN: &str = include_str!("resources/wordlist_en.txt");
+const WORDLIST_MINIMAL: &str = include_str!("resources/wordlist_minimal.txt");
 
 
 #[tauri::command]
@@ -49,21 +49,9 @@ async fn recover_seed(input_cipher: String, password: String) -> tauri::Result<S
 
     let recovered_seed = String::from_utf8_lossy(&cipher_bytes).to_string();
 
-    // 以下のコードはそのまま（wordlistの処理など）
-    let mut path_en = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    path_en.push("src");
-    path_en.push("resources");
-    path_en.push("wordlist_en.txt");
-
-    let mut path_minimal = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    path_minimal.push("src");
-    path_minimal.push("resources");
-    path_minimal.push("wordlist_minimal.txt");
-
-    let wordlist_en = read_to_string(&path_en).await?;
-    let wordlist_minimal = read_to_string(&path_minimal).await?;
-    let wordlist_en: Vec<String> = wordlist_en.lines().map(|s| s.to_owned()).collect();
-    let wordlist_minimal: Vec<String> = wordlist_minimal.lines().map(|s| s.to_owned()).collect();
+    // 以下のコードを修正して、バイナリに埋め込まれたワードリストを利用する
+    let wordlist_en: Vec<String> = WORDLIST_EN.lines().map(|s| s.to_owned()).collect();
+    let wordlist_minimal: Vec<String> = WORDLIST_MINIMAL.lines().map(|s| s.to_owned()).collect();
     let minimal_to_index: HashMap<_, _> = wordlist_minimal.iter().enumerate().map(|(i, word)| (word.as_str(), i)).collect();
 
     let recovered_seed: Vec<String> = recovered_seed.chars().collect::<Vec<_>>().chunks(2).map(|chunk| chunk.iter().collect::<String>()).collect::<Vec<String>>().iter().filter_map(|char| {
@@ -80,6 +68,7 @@ async fn recover_seed(input_cipher: String, password: String) -> tauri::Result<S
     let seed_phrase = recovered_seed.join(" ");
     Ok(seed_phrase)
 }
+
 
 
 fn main() {
