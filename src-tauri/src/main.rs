@@ -16,16 +16,7 @@ const WORDLIST_MINIMAL: &str = include_str!("resources/wordlist_minimal.txt");
 
 #[tauri::command]
 async fn handle_data(input_cipher: String, password: String) -> tauri::Result<String> {
-    println!("Received input_cipher: {}", input_cipher);
-    println!("Received password: {}", password);
-
-    let seed_phrase = match recover_seed(input_cipher, password).await {
-    Ok(result) => result,
-    Err(e) => {
-        return Err(e.into());
-    }
-    };
-    Ok(seed_phrase)
+   recover_seed(input_cipher, password).await
 }
 
 async fn recover_seed(input_cipher: String, password: String) -> tauri::Result<String> {
@@ -42,7 +33,7 @@ async fn recover_seed(input_cipher: String, password: String) -> tauri::Result<S
 
     let mut cipher_bytes = match bs58::decode(input_cipher.trim()).into_vec() {
         Ok(bytes) => bytes,
-        Err(_) => return Err(tauri::Error::from(io::Error::new(io::ErrorKind::InvalidData, "Failed to decode base58 string")))
+        Err(_) => return Err(tauri::Error::from(io::Error::new(io::ErrorKind::InvalidData, "復号に失敗しました")))
     };
 
     cipher.apply_keystream(&mut cipher_bytes);
@@ -58,12 +49,15 @@ async fn recover_seed(input_cipher: String, password: String) -> tauri::Result<S
         let index = match minimal_to_index.get(&char[..]){
             Some(index) => *index,
             None => {
-                eprintln!("Unknown word: {}", char);
                 return None;
             }
         };
         Some(wordlist_en[index].clone())
     }).collect();
+
+     if recovered_seed.is_empty() {
+        return Err(tauri::Error::from(io::Error::new(io::ErrorKind::InvalidData, "暗号文とパスワードが一致していません")));
+    }
 
     let seed_phrase = recovered_seed.join(" ");
     Ok(seed_phrase)

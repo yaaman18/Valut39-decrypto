@@ -11,12 +11,17 @@
     showPassword = !showPassword;
   }
 
-  async function handleFormSubmit() {
-  try {
-    outputSeed = await invoke('handle_data', { inputCipher: inputCipher, password: password });
-  } catch (error) {
+    async function handleFormSubmit() {
+    try {
+      outputSeed = await invoke('handle_data', { inputCipher: inputCipher, password: password });
+      passwordWarning = "";
+    } catch (error: any) {
+      // console.error(error);
+      outputSeed = "";
+      passwordWarning = error.message || "暗号文とパスワードが一致していません";
+    }
   }
-}
+
 </script>
 
 <main>
@@ -32,16 +37,16 @@
     <label>
       パスワード:
       {#if showPassword}
-    <input type="text" bind:value={password} style="width: 100%;" minlength="4" class="password-input" />
+    <input type="text" bind:value={password} style="width: 100%;" minlength="6" class="password-input" />
   {:else}
-    <input type="password" bind:value={password} style="width: 100%;" minlength="4" class="password-input" />
+    <input type="password" bind:value={password} style="width: 100%;" minlength="6" class="password-input" />
   {/if}
   <button type="button" on:click={togglePasswordVisibility} class="toggle-button">{showPassword ? '非表示にする' : 'パスワードを表示する'}</button>
     </label>
+    <button type="submit">復号する</button>
     {#if passwordWarning}
     <p style="color: red;">{passwordWarning}</p>
     {/if}
-    <button type="submit">復号する</button>
   </form>
 
   {#if outputSeed}
@@ -58,6 +63,7 @@
     align-items: center;
     justify-content: center;
     min-height: 100vh;
+
   }
   main {
     padding: 20px;
