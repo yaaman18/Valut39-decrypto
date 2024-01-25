@@ -1,5 +1,5 @@
 [package]
-name = "nil_wallet_decrypto"
+name = "valut39_decrypto"
 version = "0.0.1"
 description = "The application for decrypting the cipher text back to the seed phrase"
 
