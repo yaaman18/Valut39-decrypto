@@ -7,8 +7,8 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "Nil-wallet-decrypto",
-    "version": "0.0.0"
+    "productName": "Valut39-decrypto",
+    "version": "0.0.1"
   },
   "tauri": {
      "allowlist": {
@@ -29,7 +29,7 @@
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.decrypto.nilwallet",
+      "identifier": "com.decrypto.valut39",
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -45,7 +45,7 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "Nil-wallet-decrypto",
+        "title": "Valut39-decrypto",
         "width": 800,
         "height": 600
       }
