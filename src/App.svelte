@@ -22,6 +22,27 @@
     }
   }
 
+    function copyToClipboard(text: string) {
+    navigator.clipboard.writeText(text).then(
+      function () {
+        console.log("コピー成功");
+      },
+      function (err) {
+        console.error("コピー失敗", err);
+      },
+    );
+  }
+
+   const handlePaste = (event: ClipboardEvent) => {
+    event.preventDefault();
+    const clipboardData = event.clipboardData;
+    if (clipboardData) {
+        const pastedData = clipboardData.getData('text');
+        // CRLFをLFに置換して、不要な改行を除去
+        inputCipher = pastedData.replace(/\r\n/g, '\n').replace(/\n/g, ' '); // 修正箇所
+    }
+  };
+
 </script>
 
 <main>
@@ -32,7 +53,7 @@
   <form on:submit|preventDefault={handleFormSubmit}>
     <label>
       暗号文:
-      <input type="text" bind:value={inputCipher} style="width: 100%;" />
+      <textarea bind:value={inputCipher} style="width: 100%; white-space: pre-wrap;" rows="2" on:paste={handlePaste}></textarea>
     </label>
     <label>
       パスワード:
@@ -49,7 +70,7 @@
     {/if}
   </form>
 
-  {#if outputSeed}
+    {#if outputSeed}
     <p>シードフレーズ: {outputSeed}</p>
   {/if}
 
@@ -87,6 +108,12 @@
   label {
     display: block;
     margin-bottom: 10px;
+  }
+  textarea{
+    padding: 5px;
+    font-size: 16px;
+    width: 48vw;
+    height: 12vw;
   }
   input {
     padding: 5px;
