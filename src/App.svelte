@@ -12,15 +12,21 @@
   }
 
     async function handleFormSubmit() {
-    try {
-      outputSeed = await invoke('handle_data', { inputCipher: inputCipher, password: password });
-      passwordWarning = "";
-    } catch (error: any) {
-      // console.error(error);
-      outputSeed = "";
-      passwordWarning = error.message || "暗号文とパスワードが一致していません";
+  try {
+    outputSeed = await invoke('handle_data', { inputCipher: inputCipher, password: password });
+
+    // outputSeedが空またはnullの場合、エラーをスローします
+    if (!outputSeed) {
+      throw new Error("暗号文とパスワードが一致していません");
     }
+
+    passwordWarning = "";
+  } catch (error: any) {
+    // console.error(error);
+    outputSeed = "";
+    passwordWarning = error.message || "暗号文とパスワードが一致していません";
   }
+}
 
     function copyToClipboard(text: string) {
     navigator.clipboard.writeText(text).then(
