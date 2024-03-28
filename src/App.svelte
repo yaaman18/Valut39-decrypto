@@ -15,26 +15,26 @@
   try {
     outputSeed = await invoke('handle_data', { inputCipher: inputCipher, password: password });
 
-    // outputSeedが空またはnullの場合、エラーをスローします
+
     if (!outputSeed) {
-      throw new Error("暗号文とパスワードが一致していません");
+      throw new Error("The ciphertext and password do not match");
     }
 
     passwordWarning = "";
   } catch (error: any) {
-    // console.error(error);
+
     outputSeed = "";
-    passwordWarning = error.message || "暗号文とパスワードが一致していません";
+    passwordWarning = error.message || "The ciphertext and password do not match";
   }
 }
 
     function copyToClipboard(text: string) {
     navigator.clipboard.writeText(text).then(
       function () {
-        console.log("コピー成功");
+        console.log("copyed!");
       },
       function (err) {
-        console.error("コピー失敗", err);
+        console.error("error", err);
       },
     );
   }
@@ -44,40 +44,39 @@
     const clipboardData = event.clipboardData;
     if (clipboardData) {
         const pastedData = clipboardData.getData('text');
-        // CRLFをLFに置換して、不要な改行を除去
-        inputCipher = pastedData.replace(/\r\n/g, '\n').replace(/\n/g, ' '); // 修正箇所
+        inputCipher = pastedData.replace(/\r\n/g, '\n').replace(/\n/g, ' ');
     }
   };
 
 </script>
 
 <main>
-  <h1>Nil Wallet: 暗号復号</h1>
-  <h3>シードフレーズの復号</h3>
-  <p>こちらでは暗号化されたシードフレーズを復号することができます。暗号文とパスワードを入力して「復号する」ボタンをクリックしてください。</p>
-  <p>パスワードは暗号化時に設定したものを使用してください。</p>
+  <h1>Valut39: Decryption</h1>
+  <h2>Decrypting the Seed Phrase</h2>
+  <p>you can decrypt an encrypted seed phrase. Please enter the ciphertext and password, then click the "Decrypt" button.</p>
+  <p>Use the password you set during encryption.</p>
   <form on:submit|preventDefault={handleFormSubmit}>
     <label>
-      暗号文:
+      Ciphertext:
       <textarea bind:value={inputCipher} style="width: 100%; white-space: pre-wrap;" rows="2" on:paste={handlePaste}></textarea>
     </label>
     <label>
-      パスワード:
+      Password:
       {#if showPassword}
     <input type="text" bind:value={password} style="width: 100%;" minlength="6" class="password-input" />
   {:else}
     <input type="password" bind:value={password} style="width: 100%;" minlength="6" class="password-input" />
   {/if}
-  <button type="button" on:click={togglePasswordVisibility} class="toggle-button">{showPassword ? '非表示にする' : 'パスワードを表示する'}</button>
+  <button type="button" on:click={togglePasswordVisibility} class="toggle-button">{showPassword ? 'Hide' : 'Show password'}</button>
     </label>
-    <button type="submit">復号する</button>
+    <button type="submit">Decrypt</button>
     {#if passwordWarning}
     <p style="color: red;">{passwordWarning}</p>
     {/if}
   </form>
 
     {#if outputSeed}
-    <p>シードフレーズ: {outputSeed}</p>
+    <p>Seed Phrase: {outputSeed}</p>
   {/if}
 
 </main>
@@ -103,7 +102,7 @@
     font-size: 24px;
     margin-bottom: 20px;
   }
-  h3 {
+  h2 {
     font-size: 18px;
     margin-bottom: 10px;
   }
